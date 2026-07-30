@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(pnpm -v)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm build *)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" http://localhost:3000/nope)",
+      "Bash(pkill -f \"tsx src/index.ts\")",
+      "Bash(gh api *)",
+      "Bash(curl -s https://raw.githubusercontent.com/goldbergyoni/nodebestpractices/master/README.md -o /tmp/nbp_readme.md)",
+      "Read(//tmp/**)",
+      "Read(//private/tmp/**)",
+      "Bash(find / -iname \"*javascript-testing-patterns*\" -maxdepth 6)",
+      "Read(//Users/cesararellano/.claude/**)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm remove *)",
+      "Bash(rm tsconfig.jest.json)",
+      "Bash(pnpm test:coverage)",
+      "Bash(pnpm format:check)"
+    ]
+  }
+}
