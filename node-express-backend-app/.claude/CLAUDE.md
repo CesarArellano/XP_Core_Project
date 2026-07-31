@@ -141,6 +141,26 @@ via an `ALLOWED_ORIGINS` env var before any real client integrates, and add `hel
 headers at the same time. Neither is configured yet — flag as an open decision, don't assume either
 is production-ready as-is.
 
+### Password hashing
+
+`bcrypt` (native, ^6.0.0, plus `@types/bcrypt`) is installed for hashing user passwords —
+`src/utils/password.ts` exports `hashPassword(plainTextPassword)` and
+`verifyPassword(plainTextPassword, passwordHash)`, both async, salt rounds fixed at 12. No user
+model/DB exists yet, so this is a standalone utility — wire it into a user
+service/repository's create/authenticate flow once one lands, rather than calling `bcrypt`
+directly from a route or controller.
+
+- Never store or log a plaintext password — always pass it through `hashPassword` before
+  persisting, and only compare via `verifyPassword` (which handles the constant-time compare
+  internally), never by comparing hashes with `===`.
+- `bcrypt` is a native addon (compiled via `node-gyp-build` on install) — pnpm blocks its install
+  script by default, so `pnpm.onlyBuiltDependencies: ["bcrypt"]` in `package.json` explicitly
+  approves it. Keep that entry if `bcrypt` is ever removed and re-added, or `pnpm install` will
+  silently skip the native build and `bcrypt.hash`/`bcrypt.compare` will throw at runtime.
+- Don't hand-roll salting or use a synchronous `hashSync`/`compareSync` call on a request path —
+  those block the event loop; the async API above is already Express-5-friendly (rejected promises
+  forward automatically, see Routing & handlers above).
+
 ### Environment & config
 
 `.env.example` currently documents only `PORT`. `dotenv/config` is imported for its side effect at
